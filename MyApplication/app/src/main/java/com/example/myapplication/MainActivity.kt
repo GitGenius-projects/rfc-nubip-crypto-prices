@@ -42,11 +42,14 @@ fun Page() {
     val scope = rememberCoroutineScope()
 
     Column(modifier = Modifier.padding(16.dp)) {
+        // Текстове поле для введення символу торгової пари
         TextField(
             value = symbol,
             onValueChange = { symbol = it },
             label = { Text("Введіть пару") }
         )
+        
+        // Кнопка для отримання ціни
         Button(onClick = {
             scope.launch {
                 val result = withContext(Dispatchers.IO) {
@@ -58,6 +61,7 @@ fun Page() {
                             .url(url)
                             .build()
                         val response = client.newCall(request).execute()
+                        
                         if (response.isSuccessful) {
                             val responseBody = response.body?.string()
                             val jsonObject = responseBody?.let { JSONObject(it) }
@@ -75,6 +79,8 @@ fun Page() {
         }, modifier = Modifier.padding(top = 8.dp)) {
             Text("Взяти ціну")
         }
+        
+        // Виведення результату
         Text(
             text = price,
             modifier = Modifier.padding(top = 16.dp)
